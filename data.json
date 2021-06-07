@@ -1,0 +1,8 @@
+{
+    "name":"欢太商城薅羊毛",
+    "namespace" : "\\App\\Plugins\\Htshop",
+    "dirname" : "Htshop",
+    "boot" : [
+        "Boot"
+    ]
+}
