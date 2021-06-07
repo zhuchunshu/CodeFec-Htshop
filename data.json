@@ -6,6 +6,10 @@
         "Boot"
     ],
     "command":[
-        
+        "\\App\\Plugins\\Htshop\\src\\Commands\\TaskCommand",
+        "\\App\\Plugins\\Htshop\\src\\Commands\\CreateCommand",
+        "\\App\\Plugins\\Htshop\\src\\Commands\\RemoveCommand",
+        "\\App\\Plugins\\Htshop\\src\\Commands\\ListCommand",
+        "\\App\\Plugins\\Htshop\\src\\Commands\\StatusCommand"
     ]
 }
