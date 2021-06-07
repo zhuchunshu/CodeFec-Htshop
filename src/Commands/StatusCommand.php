@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Plugins\Htshop\src\Commands;
 
 use Illuminate\Console\Command;
 
