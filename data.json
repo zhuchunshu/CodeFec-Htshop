@@ -4,5 +4,8 @@
     "dirname" : "Htshop",
     "boot" : [
         "Boot"
+    ],
+    "command":[
+        
     ]
 }
