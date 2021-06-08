@@ -12,3 +12,12 @@ Route::prefix('admin/settingPro/Htshop')
     Route::get('/', [AdminController::class,"index"])->name("index");
     
 });
+
+
+// 
+Route::prefix('Htshop')
+    ->name('Htshop.')
+    ->group(function () {
+    Route::get('/', [AdminController::class,"index"])->name("index");
+    
+});
