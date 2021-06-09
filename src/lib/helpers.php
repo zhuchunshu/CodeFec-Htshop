@@ -72,8 +72,6 @@ if(!function_exists("htcurl_get")){
             "Sec-Fetch-Mode" => "cors",
             "Sec-Fetch-Dest" => "empty",
             "Referer" => "https://store.oppo.com/cn/app/taskCenter/index",
-            "Accept-Encoding" => "gzip, deflate",
-            "Accept-Language" => "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
         ]);
         $curl->get($url, $data);
         return $curl;

@@ -26,4 +26,9 @@ Route::prefix('Htshop')
 
         Route::post('/', [IndexController::class, "store"])->name("post");
 
+        Route::get('/test', function () {
+            $htshop = Htshop::where("id", 1)->first();
+            $config = include plugin_path("Htshop/src/lib/api.php");
+            return obj_arr(htcurl_get($config["每日任务列表"],$htshop->cookies)->response)['data']['everydayList'];
+        });
     });

@@ -38,7 +38,7 @@ class HtTask implements ShouldQueue
      */
     public function handle()
     {
-        $htp = http_getsWithHeaders("https://www.heytap.com/cn/oapi/users/web/member/info",[
+        $htp = http_getsWithHeaders($this->config["个人信息"],[
             "Cookie"=>$this->htshop->cookies,
             "Accept"=>"application/json, text/plain, */*"
         ])->json();
@@ -49,7 +49,7 @@ class HtTask implements ShouldQueue
             $response =http_gets($this->config["任务列表"]);
             $data = $response->json();
             // 商品列表
-            $shopList = http_gets("https://www.heytap.com/cn/oapi/goods/web/ranking/rankDetailInfo?rankId=2240&currentPage=1&pageSize=100")->json();
+            $shopList = http_gets($this->config["商品列表"])->json();
             if ($data['no'] == 200) {
                 foreach ($data['data'] as $value) {
                     //做任务
@@ -77,13 +77,40 @@ class HtTask implements ShouldQueue
                             sleep(2);
                         }
                     }
+
+                    // 签到
+
+                    if($value['title']=="每日签到"){
+                        $qd_num = $value['number'];
+                        htcurl_post($this->config['签到'], $this->htshop->cookies, [
+                            "amount" => $qd_num,
+                            "type" => 1,
+                            "gift" => 50002058
+                        ]);
+                        $qd_num = $value['number'];
+                        htcurl_post($this->config['签到'], $this->htshop->cookies, [
+                            "amount" => $qd_num,
+                            "type" => $value['type'],
+                            "gift" => 50002058
+                        ]);
+                    }
                     
                     // 自动领取
                     htcurl_post($this->config['领积分'], $this->htshop->cookies, [
                         "aid" => 1506,
                         "t_index" => $value['t_index']
                     ]);
-                    
+
+                    // 自动领取每日任务奖励
+                    // 每日任务列表
+                    $edList = obj_arr(htcurl_get($this->config["每日任务列表"],$this->htshop->cookies)->response)['data']['everydayList'];
+                    foreach ($edList as $Edvalue) {
+                        htcurl_post($this->config["领每日任务积分"],$this->htshop->cookies,[
+                            "marking" => $Edvalue['marking'],
+                            "type" => $Edvalue["type"],
+                            "amount" => $Edvalue['credits']
+                        ]);
+                    }
                 }
             } else {
                 dd("出错: 任务ID:" . $this->htshop->id);
