@@ -11,6 +11,7 @@ class Boot
 
     public function handle()
     {
+        include plugin_path("Htshop/vendor/autoload.php");
         $this->route();
         $this->menu();
         $this->config();
