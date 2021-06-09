@@ -59,7 +59,7 @@ class HtTask implements ShouldQueue
                     ]);
     
                     if ($value['title'] == "浏览商品") {
-                        for ($i = 0; $i < 6; $i++) {
+                        for ($i = 0; $i < 10; $i++) {
                             htcurl_get($this->config["浏览商品"], $this->htshop->cookies, [
                                 "skuId" => Arr::random($shopList['data']['rankingGoods'])['goodsSkuId']
                             ]);
@@ -67,7 +67,17 @@ class HtTask implements ShouldQueue
                             sleep(5);
                         }
                     }
-    
+
+                    if($value['title']=="分享商品"){
+                        for ($i=0; $i < 4; $i++) { 
+                            http_getsWithHeaders("https://msec.opposhop.cn/users/vi/creditsTask/pushTask?marking=daily_sharegoods",[
+                                "Cookie"=>$this->htshop->cookies,
+                                "Accept"=>"application/json, text/plain, */*"
+                            ])->json();
+                            sleep(2);
+                        }
+                    }
+                    
                     // 自动领取
                     htcurl_post($this->config['领积分'], $this->htshop->cookies, [
                         "aid" => 1506,
