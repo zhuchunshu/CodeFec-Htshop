@@ -91,3 +91,9 @@ if(!function_exists("http_gets")){
         return Http::get($url);
     }
 }
+
+if(!function_exists("http_getsWithHeaders")){
+    function http_getsWithHeaders($url,$headers=[]){
+        return Http::withHeaders($headers)->get($url);
+    }
+}
