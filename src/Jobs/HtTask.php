@@ -78,6 +78,12 @@ class HtTask implements ShouldQueue
                         }
                     }
 
+                    // 点推送
+                    http_getsWithHeaders("https://msec.opposhop.cn/users/vi/creditsTask/pushTask?marking=daily_viewpush",[
+                        "Cookie"=>$this->htshop->cookies,
+                        "Accept"=>"application/json, text/plain, */*"
+                    ])->json();
+
                     // 签到
 
                     if($value['title']=="每日签到"){
