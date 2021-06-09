@@ -1,6 +1,7 @@
 <?php
 
 use Curl\Curl;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Plugins\Htshop\src\Models\Htshop;
@@ -25,14 +26,4 @@ Route::prefix('Htshop')
 
         Route::post('/', [IndexController::class, "store"])->name("post");
 
-        Route::get('/test', function () {
-            $htshop = Htshop::where("id", 1)->first();
-            $config = include plugin_path("Htshop/src/lib/api.php");
-            $curl = htcurl_post($config["签到"],$htshop->cookies,[
-                "amount" => 5,
-                "type" => 1,
-                "gift" => 50002058
-            ]);
-            dd($curl->response);
-        });
     });
