@@ -27,5 +27,6 @@ CodeFec VERSION >=V1.1.2
 
 ### 用法
 安装:https://github.com/zhuchunshu/CodeFec-Htshop/wiki/%E5%AE%89%E8%A3%85
+
 使用:https://github.com/zhuchunshu/CodeFec-Htshop/wiki/%E4%BD%BF%E7%94%A8
 
