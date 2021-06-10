@@ -95,3 +95,12 @@ if(!function_exists("http_getsWithHeaders")){
         return Http::withHeaders($headers)->get($url);
     }
 }
+
+if(!function_exists("dateJs")){
+    // date1 - date2
+    function dateJs($date1,$date2){
+        $date1 = strtotime($date1);
+        $date2 = strtotime($date2);
+        return intval(($date1-$date2)/86400);
+    }
+}

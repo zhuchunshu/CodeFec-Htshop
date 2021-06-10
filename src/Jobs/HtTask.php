@@ -91,13 +91,13 @@ class HtTask implements ShouldQueue
                         htcurl_post($this->config['签到'], $this->htshop->cookies, [
                             "amount" => $qd_num,
                             "type" => 1,
-                            "gift" => 50002058
+                            "gift" => 50002058+dateJs(date("Y-m-d"),date("2021-06-09"))
                         ]);
                         $qd_num = $value['number'];
                         htcurl_post($this->config['签到'], $this->htshop->cookies, [
                             "amount" => $qd_num,
                             "type" => $value['type'],
-                            "gift" => 50002058
+                            "gift" => 50002058+dateJs(date("Y-m-d"),date("2021-06-09"))
                         ]);
                     }
                     
