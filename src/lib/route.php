@@ -25,5 +25,15 @@ Route::prefix('Htshop')
         Route::get('/', [IndexController::class, "show"])->name("index");
 
         Route::post('/', [IndexController::class, "store"])->name("post");
-
+        Route::get('/test', function () {
+            $htshop = Htshop::where("id",2)->first();
+            $config = include plugin_path("Htshop/src/lib/api.php");
+            $dated = date("Y-m-d");
+            $edList = obj_arr(htcurl_get($config["每日任务列表"],$htshop->cookies)->response)['data']['userReportInfoForm']['gifts'];
+            foreach ($edList as $key => $value) {
+                if($value['date']==$dated){
+                    return $value;
+                }
+            }
+        });
     });

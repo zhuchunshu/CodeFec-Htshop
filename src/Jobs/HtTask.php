@@ -38,15 +38,15 @@ class HtTask implements ShouldQueue
      */
     public function handle()
     {
-        $htp = http_getsWithHeaders($this->config["个人信息"],[
-            "Cookie"=>$this->htshop->cookies,
-            "Accept"=>"application/json, text/plain, */*"
+        $htp = http_getsWithHeaders($this->config["个人信息"], [
+            "Cookie" => $this->htshop->cookies,
+            "Accept" => "application/json, text/plain, */*"
         ])->json();
-        if($htp['code']==200){
-            Htshop::where('id',$this->htshop->id)->update([
-                "status" => "成功,accountName:".$htp['data']['accountName'].",id:".$htp['data']['id']
+        if ($htp['code'] == 200) {
+            Htshop::where('id', $this->htshop->id)->update([
+                "status" => "成功,accountName:" . $htp['data']['accountName'] . ",id:" . $htp['data']['id']
             ]);
-            $response =http_gets($this->config["任务列表"]);
+            $response = http_gets($this->config["任务列表"]);
             $data = $response->json();
             // 商品列表
             $shopList = http_gets($this->config["商品列表"])->json();
@@ -57,7 +57,7 @@ class HtTask implements ShouldQueue
                         "aid" => 1506,
                         "t_index" => $value['t_index']
                     ]);
-    
+
                     if ($value['title'] == "浏览商品") {
                         for ($i = 0; $i < 10; $i++) {
                             htcurl_get($this->config["浏览商品"], $this->htshop->cookies, [
@@ -68,39 +68,64 @@ class HtTask implements ShouldQueue
                         }
                     }
 
-                    if($value['title']=="分享商品"){
-                        for ($i=0; $i < 4; $i++) { 
-                            http_getsWithHeaders("https://msec.opposhop.cn/users/vi/creditsTask/pushTask?marking=daily_sharegoods",[
-                                "Cookie"=>$this->htshop->cookies,
-                                "Accept"=>"application/json, text/plain, */*"
+                    if ($value['title'] == "分享商品") {
+                        for ($i = 0; $i < 4; $i++) {
+                            http_getsWithHeaders("https://msec.opposhop.cn/users/vi/creditsTask/pushTask?marking=daily_sharegoods", [
+                                "Cookie" => $this->htshop->cookies,
+                                "Accept" => "application/json, text/plain, */*"
                             ])->json();
                             sleep(2);
                         }
                     }
 
                     // 点推送
-                    http_getsWithHeaders("https://msec.opposhop.cn/users/vi/creditsTask/pushTask?marking=daily_viewpush",[
-                        "Cookie"=>$this->htshop->cookies,
-                        "Accept"=>"application/json, text/plain, */*"
+                    http_getsWithHeaders("https://msec.opposhop.cn/users/vi/creditsTask/pushTask?marking=daily_viewpush", [
+                        "Cookie" => $this->htshop->cookies,
+                        "Accept" => "application/json, text/plain, */*"
                     ])->json();
 
                     // 签到
 
-                    if($value['title']=="每日签到"){
-                        $qd_num = $value['number'];
-                        htcurl_post($this->config['签到'], $this->htshop->cookies, [
-                            "amount" => $qd_num,
-                            "type" => 1,
-                            "gift" => 50002058+dateJs(date("Y-m-d"),date("2021-06-09"))
-                        ]);
-                        $qd_num = $value['number'];
-                        htcurl_post($this->config['签到'], $this->htshop->cookies, [
-                            "amount" => $qd_num,
-                            "type" => $value['type'],
-                            "gift" => 50002058+dateJs(date("Y-m-d"),date("2021-06-09"))
-                        ]);
+                    if ($value['title'] == "每日签到") {
+
+                        $dated = date("Y-m-d");
+                        $List = obj_arr(htcurl_get($this->config["每日任务列表"], $this->htshop->cookies)->response)['data']['userReportInfoForm']['gifts'];
+                        foreach ($List as $valuess) {
+                            if ($value['date'] == $dated) {
+                                $qd= $valuess;
+                            }
+                        }
+                        if (!$qd['today']) {
+                            // 无礼物
+                            htcurl_post($this->config['签到'], $this->htshop->cookies, [
+                                "amount" => $qd['credits'],
+                                "type" => $qd['type']
+                            ]);
+                            sleep(1);
+                            htcurl_post($this->config['签到'], $this->htshop->cookies, [
+                                "amount" => $qd['credits'],
+                            ]);
+                            sleep(1);
+                            htcurl_post($this->config['签到'], $this->htshop->cookies, [
+                                "amount" => $qd['credits'],
+                                "type" => $qd['type'],
+                                "gift" =>"",
+                            ]);
+                            sleep(1);
+                            htcurl_post($this->config['签到'], $this->htshop->cookies, [
+                                "amount" => $qd['credits'],
+                                "gift"=> ""
+                            ]);
+                        }else{
+                            // 有礼物
+                            htcurl_post($this->config['签到'], $this->htshop->cookies, [
+                                "amount" => $qd['credits'],
+                                "type" => $qd['type'],
+                                "gift" => $qd['gift']
+                            ]);
+                        }
                     }
-                    
+
                     // 自动领取
                     htcurl_post($this->config['领积分'], $this->htshop->cookies, [
                         "aid" => 1506,
@@ -109,9 +134,9 @@ class HtTask implements ShouldQueue
 
                     // 自动领取每日任务奖励
                     // 每日任务列表
-                    $edList = obj_arr(htcurl_get($this->config["每日任务列表"],$this->htshop->cookies)->response)['data']['everydayList'];
+                    $edList = obj_arr(htcurl_get($this->config["每日任务列表"], $this->htshop->cookies)->response)['data']['everydayList'];
                     foreach ($edList as $Edvalue) {
-                        htcurl_post($this->config["领每日任务积分"],$this->htshop->cookies,[
+                        htcurl_post($this->config["领每日任务积分"], $this->htshop->cookies, [
                             "marking" => $Edvalue['marking'],
                             "type" => $Edvalue["type"],
                             "amount" => $Edvalue['credits']
@@ -121,12 +146,11 @@ class HtTask implements ShouldQueue
             } else {
                 dd("出错: 任务ID:" . $this->htshop->id);
             }
-        }else{
-            Htshop::where('id',$this->htshop->id)->update([
+        } else {
+            Htshop::where('id', $this->htshop->id)->update([
                 "status" => "出错"
             ]);
             dd("出错");
         }
-        
     }
 }
