@@ -91,7 +91,7 @@ class HtTask implements ShouldQueue
                         $dated = date("Y-m-d");
                         $List = obj_arr(htcurl_get($this->config["每日任务列表"], $this->htshop->cookies)->response)['data']['userReportInfoForm']['gifts'];
                         foreach ($List as $valuess) {
-                            if ($value['date'] == $dated) {
+                            if ($valuess['date'] == $dated) {
                                 $qd= $valuess;
                             }
                         }

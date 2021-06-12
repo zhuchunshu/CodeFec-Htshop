@@ -44,7 +44,7 @@ class TaskCommand extends Command
         $htshops = Htshop::get();
         $config = include plugin_path("Htshop/src/lib/api.php");
         foreach ($htshops as $htshop) {
-            dispatch(new HtTask($htshop,$config));
+            return dispatch(new HtTask($htshop,$config));
         }
         $this->info("所有任务已丢进队列!");
     }
