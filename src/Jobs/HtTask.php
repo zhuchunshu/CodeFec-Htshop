@@ -123,6 +123,7 @@ class HtTask implements ShouldQueue
                                 "type" => $qd['type'],
                                 "gift" => $qd['gift']
                             ]);
+                            sleep(1);
                         }
                     }
 
